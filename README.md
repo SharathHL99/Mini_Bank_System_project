@@ -36,7 +36,7 @@ Transaction APIs | Method | Endpoint | |----------|----------| | POST | /api/tra
 
 Report APIs | Method | Endpoint | |----------|----------| | GET | /api/reports/dashboard | | GET | /api/reports/total-balance | | GET | /api/reports/today-transactions |
 
-Sample Request Create Customer Request { "firstName": "Rahul", "lastName": "Sharma", "email": "rahul@gmail.com", "mobileNumber": "9876543210" } Response { "success": true, "message": "Customer created successfully", "data": { "customerId": 1, "firstName": "Rahul", "lastName": "Sharma", "email": "rahul@gmail.com", "mobileNumber": "9876543210", "status": "ACTIVE" } } Validation Implemented using:
+Sample Request Create Customer Request { "firstName": "Sharath", "lastName": "sharu", "email": "sharath@gmail.com", "mobileNumber": "9676789898" } Response { "success": true, "message": "Customer created successfully", "data": { "customerId": 1, "firstName": "abhi", "lastName": "Reddy", "email": "abhi@gmail.com", "mobileNumber": "9876546678", "status": "ACTIVE" } } Validation Implemented using:
 
 @NotNull @NotBlank @Email @DecimalMin @Min Exception Handling Custom Exceptions:
 
