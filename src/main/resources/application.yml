@@ -1,6 +1,6 @@
 spring:
   application:
-    name: BankingMiniCoreSystem
+    name: Mini_Bank_System_project
 
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/bankingdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
