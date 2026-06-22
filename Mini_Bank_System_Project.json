@@ -1,0 +1,250 @@
+{
+"info": {
+"name": "Mini Bank System Project",
+"_postman_id": "12345678-aaaa-bbbb-cccc-1234567890ab",
+"description": "Complete API collection for Banking System (Java 21 Spring Boot)",
+"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+},
+"item": [
+
+
+{
+  "name": "Customer APIs",
+  "item": [
+
+    {
+      "name": "Create Customer (SUCCESS)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"David\",\n  \"email\": \"john@gmail.com\",\n  \"mobileNumber\": \"9876543210\"\n}"
+        },
+        "url": "http://localhost:8080/api/customers"
+      }
+    },
+
+    {
+      "name": "Get Customer By ID (SUCCESS)",
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:8080/api/customers/1"
+      }
+    },
+
+    {
+      "name": "Get All Customers",
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:8080/api/customers"
+      }
+    },
+
+    {
+      "name": "Customer Not Found (ERROR)",
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:8080/api/customers/9999"
+      }
+    },
+
+    {
+      "name": "Block Customer",
+      "request": {
+        "method": "PATCH",
+        "url": "http://localhost:8080/api/customers/1/block"
+      }
+    },
+
+    {
+      "name": "Activate Customer",
+      "request": {
+        "method": "PATCH",
+        "url": "http://localhost:8080/api/customers/1/activate"
+      }
+    }
+  ]
+},
+
+{
+  "name": "Account APIs",
+  "item": [
+
+    {
+      "name": "Create Account (SUCCESS)",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customerId\": 1,\n  \"accountType\": \"SAVINGS\",\n  \"initialBalance\": 10000\n}"
+        },
+        "url": "http://localhost:8080/api/accounts"
+      }
+    },
+
+    {
+      "name": "Get Account By ID",
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:8080/api/accounts/1"
+      }
+    },
+
+    {
+      "name": "Get All Accounts",
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:8080/api/accounts"
+      }
+    },
+
+    {
+      "name": "Account Not Found (ERROR)",
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:8080/api/accounts/9999"
+      }
+    },
+
+    {
+      "name": "Deactivate Account",
+      "request": {
+        "method": "PATCH",
+        "url": "http://localhost:8080/api/accounts/1/deactivate"
+      }
+    },
+
+    {
+      "name": "Activate Account",
+      "request": {
+        "method": "PATCH",
+        "url": "http://localhost:8080/api/accounts/1/activate"
+      }
+    }
+  ]
+},
+
+{
+  "name": "Transaction APIs",
+  "item": [
+
+    {
+      "name": "Deposit (SUCCESS)",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"accountId\": 1,\n  \"amount\": 5000\n}"
+        },
+        "url": "http://localhost:8080/api/transactions/deposit"
+      }
+    },
+
+    {
+      "name": "Withdraw (SUCCESS)",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"accountId\": 1,\n  \"amount\": 2000\n}"
+        },
+        "url": "http://localhost:8080/api/transactions/withdraw"
+      }
+    },
+
+    {
+      "name": "Insufficient Balance (ERROR - Withdraw)",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"accountId\": 1,\n  \"amount\": 999999\n}"
+        },
+        "url": "http://localhost:8080/api/transactions/withdraw"
+      }
+    },
+
+    {
+      "name": "Transfer (SUCCESS)",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sourceAccountId\": 1,\n  \"destinationAccountId\": 2,\n  \"amount\": 1000\n}"
+        },
+        "url": "http://localhost:8080/api/transactions/transfer"
+      }
+    },
+
+    {
+      "name": "Same Account Transfer (ERROR)",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sourceAccountId\": 1,\n  \"destinationAccountId\": 1,\n  \"amount\": 1000\n}"
+        },
+        "url": "http://localhost:8080/api/transactions/transfer"
+      }
+    },
+
+    {
+      "name": "Account Not Found (ERROR)",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"accountId\": 9999,\n  \"amount\": 1000\n}"
+        },
+        "url": "http://localhost:8080/api/transactions/deposit"
+      }
+    },
+
+    {
+      "name": "Invalid Amount (ERROR)",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"accountId\": 1,\n  \"amount\": 0\n}"
+        },
+        "url": "http://localhost:8080/api/transactions/deposit"
+      }
+    },
+
+    {
+      "name": "Account Statement",
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:8080/api/transactions/statement/ACC100001"
+      }
+    }
+  ]
+},
+
+{
+  "name": "Reporting APIs",
+  "item": [
+
+    {
+      "name": "Dashboard",
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:8080/api/reports/dashboard"
+      }
+    },
+
+    {
+      "name": "Total Bank Balance",
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:8080/api/reports/total-balance"
+      }
+    }
+  ]
+}
+
+
+]
+}
