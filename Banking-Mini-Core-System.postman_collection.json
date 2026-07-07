@@ -1,0 +1,490 @@
+{
+  "info": {
+    "name": "Banking Mini Core System - API Documentation",
+    "description": "REST API documentation (Postman collection) for the Banking Mini Core System. Covers Customer Management, Account Management, Transaction Management (deposit/withdrawal/transfer), Audit & Logs, and Reporting modules.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080/api/v1", "type": "string" },
+    { "key": "customerId", "value": "1", "type": "string" },
+    { "key": "accountId", "value": "1001", "type": "string" },
+    { "key": "targetAccountId", "value": "1002", "type": "string" },
+    { "key": "transactionId", "value": "5001", "type": "string" },
+    { "key": "fromDate", "value": "2026-01-01", "type": "string" },
+    { "key": "toDate", "value": "2026-12-31", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "1. Customer Management",
+      "item": [
+        {
+          "name": "Create Customer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Alice\",\n  \"lastName\": \"Sharma\",\n  \"email\": \"alice.sharma@example.com\",\n  \"phone\": \"9876543210\",\n  \"address\": \"MG Road, Bengaluru\",\n  \"dateOfBirth\": \"1995-04-12\",\n  \"kycDocumentNumber\": \"ABCDE1234F\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/customers",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers"]
+            },
+            "description": "Creates a new bank customer record. Returns 201 Created with the generated customerId."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"customerId\": 1,\n  \"firstName\": \"Alice\",\n  \"lastName\": \"Sharma\",\n  \"email\": \"alice.sharma@example.com\",\n  \"phone\": \"9876543210\",\n  \"status\": \"ACTIVE\",\n  \"createdAt\": \"2026-07-07T10:15:30\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Customer By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "{{customerId}}"]
+            },
+            "description": "Fetches customer profile details including linked account summaries."
+          }
+        },
+        {
+          "name": "Get All Customers (Paginated)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/customers?page=0&size=10&sort=createdAt,desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" },
+                { "key": "sort", "value": "createdAt,desc" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Customer",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"9876500000\",\n  \"address\": \"Indiranagar, Bengaluru\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "{{customerId}}"]
+            }
+          }
+        },
+        {
+          "name": "Deactivate Customer",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"INACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "{{customerId}}", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Account Management",
+      "item": [
+        {
+          "name": "Open Account (Link to Customer)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": {{customerId}},\n  \"accountType\": \"SAVINGS\",\n  \"initialDeposit\": 5000.00,\n  \"currency\": \"INR\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts",
+              "host": ["{{baseUrl}}"],
+              "path": ["accounts"]
+            },
+            "description": "Opens a new SAVINGS or CURRENT account linked to an existing customer. accountType: SAVINGS | CURRENT."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"accountId\": 1001,\n  \"customerId\": 1,\n  \"accountNumber\": \"BNK0000001001\",\n  \"accountType\": \"SAVINGS\",\n  \"balance\": 5000.00,\n  \"currency\": \"INR\",\n  \"status\": \"ACTIVE\",\n  \"createdAt\": \"2026-07-07T10:20:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Account By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["accounts", "{{accountId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Accounts By Customer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}/accounts",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "{{customerId}}", "accounts"]
+            }
+          }
+        },
+        {
+          "name": "Get Account Balance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountId}}/balance",
+              "host": ["{{baseUrl}}"],
+              "path": ["accounts", "{{accountId}}", "balance"]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"accountId\": 1001,\n  \"balance\": 5000.00,\n  \"currency\": \"INR\",\n  \"asOf\": \"2026-07-07T10:25:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Close Account",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"CLOSED\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["accounts", "{{accountId}}", "status"]
+            },
+            "description": "Fails with 409 CONFLICT if the account balance is non-zero."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Transaction Management",
+      "item": [
+        {
+          "name": "Deposit",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": {{accountId}},\n  \"amount\": 2000.00,\n  \"description\": \"Cash deposit at branch\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions/deposit",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions", "deposit"]
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"transactionId\": 5001,\n  \"accountId\": 1001,\n  \"type\": \"DEPOSIT\",\n  \"amount\": 2000.00,\n  \"balanceAfter\": 7000.00,\n  \"status\": \"SUCCESS\",\n  \"timestamp\": \"2026-07-07T10:30:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Withdrawal",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": {{accountId}},\n  \"amount\": 1500.00,\n  \"description\": \"ATM withdrawal\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions/withdraw",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions", "withdraw"]
+            },
+            "description": "Fails with 422 UNPROCESSABLE_ENTITY (INSUFFICIENT_FUNDS) if withdrawal would overdraw the account."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"transactionId\": 5002,\n  \"accountId\": 1001,\n  \"type\": \"WITHDRAWAL\",\n  \"amount\": 1500.00,\n  \"balanceAfter\": 5500.00,\n  \"status\": \"SUCCESS\",\n  \"timestamp\": \"2026-07-07T10:32:00\"\n}"
+            },
+            {
+              "name": "422 Insufficient Funds",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "body": "{\n  \"timestamp\": \"2026-07-07T10:32:00\",\n  \"status\": 422,\n  \"error\": \"INSUFFICIENT_FUNDS\",\n  \"message\": \"Withdrawal amount exceeds available balance for account 1001\",\n  \"path\": \"/api/v1/transactions/withdraw\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Fund Transfer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromAccountId\": {{accountId}},\n  \"toAccountId\": {{targetAccountId}},\n  \"amount\": 1000.00,\n  \"description\": \"Fund transfer to savings\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions/transfer",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions", "transfer"]
+            },
+            "description": "Atomic debit-credit operation executed within a single @Transactional boundary with pessimistic/ordered locking to prevent race conditions and deadlocks."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"transferId\": \"TRF-20260707-0001\",\n  \"fromAccountId\": 1001,\n  \"toAccountId\": 1002,\n  \"amount\": 1000.00,\n  \"fromAccountBalanceAfter\": 4500.00,\n  \"toAccountBalanceAfter\": 3000.00,\n  \"status\": \"SUCCESS\",\n  \"timestamp\": \"2026-07-07T10:35:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Transaction By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions/{{transactionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions", "{{transactionId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Transaction History By Account (Paginated)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountId}}/transactions?page=0&size=20&fromDate={{fromDate}}&toDate={{toDate}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["accounts", "{{accountId}}", "transactions"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" },
+                { "key": "fromDate", "value": "{{fromDate}}" },
+                { "key": "toDate", "value": "{{toDate}}" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Audit & Logs",
+      "item": [
+        {
+          "name": "Get Audit Trail By Account",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountId}}/audit-logs?page=0&size=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["accounts", "{{accountId}}", "audit-logs"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            },
+            "description": "Returns immutable audit entries (who/what/when) for every state-changing action on the account, including failed/rejected attempts."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"content\": [\n    {\n      \"auditId\": 9001,\n      \"accountId\": 1001,\n      \"action\": \"WITHDRAWAL_REJECTED\",\n      \"details\": \"Attempted withdrawal of 50000.00 exceeds balance 5500.00\",\n      \"performedBy\": \"SYSTEM\",\n      \"timestamp\": \"2026-07-07T10:40:00\"\n    }\n  ],\n  \"page\": 0,\n  \"size\": 20,\n  \"totalElements\": 1\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Audit Trail By Customer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}/audit-logs?page=0&size=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "{{customerId}}", "audit-logs"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Reporting",
+      "item": [
+        {
+          "name": "Get Daily Statement",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountId}}/statement/daily?date=2026-07-07",
+              "host": ["{{baseUrl}}"],
+              "path": ["accounts", "{{accountId}}", "statement", "daily"],
+              "query": [
+                { "key": "date", "value": "2026-07-07" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Statement For Date Range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountId}}/statement?fromDate={{fromDate}}&toDate={{toDate}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["accounts", "{{accountId}}", "statement"],
+              "query": [
+                { "key": "fromDate", "value": "{{fromDate}}" },
+                { "key": "toDate", "value": "{{toDate}}" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Balance Summary By Customer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}/balance-summary",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "{{customerId}}", "balance-summary"]
+            },
+            "description": "Returns total balance across all accounts owned by the customer, broken down by account."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"customerId\": 1,\n  \"totalBalance\": 7500.00,\n  \"currency\": \"INR\",\n  \"accounts\": [\n    { \"accountId\": 1001, \"accountType\": \"SAVINGS\", \"balance\": 4500.00 },\n    { \"accountId\": 1002, \"accountType\": \"CURRENT\", \"balance\": 3000.00 }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Download Statement (PDF/CSV)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/pdf" }],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountId}}/statement/export?format=pdf&fromDate={{fromDate}}&toDate={{toDate}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["accounts", "{{accountId}}", "statement", "export"],
+              "query": [
+                { "key": "format", "value": "pdf" },
+                { "key": "fromDate", "value": "{{fromDate}}" },
+                { "key": "toDate", "value": "{{toDate}}" }
+              ]
+            },
+            "description": "format: pdf | csv"
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Error Scenarios (Reference)",
+      "item": [
+        {
+          "name": "Withdraw - Overdraft Attempt (Expect 422)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": {{accountId}},\n  \"amount\": 999999.00,\n  \"description\": \"Overdraft test\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions/withdraw",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions", "withdraw"]
+            }
+          }
+        },
+        {
+          "name": "Transfer - Invalid Target Account (Expect 404)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromAccountId\": {{accountId}},\n  \"toAccountId\": 999999,\n  \"amount\": 100.00,\n  \"description\": \"Invalid target test\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions/transfer",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions", "transfer"]
+            }
+          }
+        },
+        {
+          "name": "Deposit - Negative Amount (Expect 400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": {{accountId}},\n  \"amount\": -500.00,\n  \"description\": \"Invalid negative deposit\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions/deposit",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions", "deposit"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
