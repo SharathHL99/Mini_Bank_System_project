@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Banking Mini Core System - ER Diagram</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #ffffff;
+    color: #2c2c2a;
+    margin: 0;
+    padding: 32px;
+  }
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+  #erd {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  #erd svg {
+    width: 100%;
+    height: auto;
+  }
+</style>
+</head>
+<body>
+  <h1>Banking Mini Core System &mdash; Entity Relationship Diagram</h1>
+  <div id="erd"></div>
+
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'default',
+      fontFamily: '"Segoe UI", sans-serif',
+      themeVariables: {
+        fontSize: '14px'
+      }
+    });
+
+    const erDefinition = `erDiagram
+    CUSTOMER ||--o{ ACCOUNT : owns
+    ACCOUNT ||--o{ TRANSACTION : has
+    ACCOUNT ||--o{ TRANSACTION : "related to"
+    ACCOUNT ||--o{ AUDIT_LOG : generates
+    CUSTOMER ||--o{ AUDIT_LOG : generates
+    TRANSACTION ||--o{ AUDIT_LOG : "referenced by"
+    ACCOUNT ||--o{ DAILY_BALANCE_SNAPSHOT : "rolled up into"
+
+    CUSTOMER {
+        bigint customer_id PK
+        string first_name
+        string last_name
+        string email UK
+        string phone
+        string kyc_document_number UK
+        string status
+    }
+    ACCOUNT {
+        bigint account_id PK
+        bigint customer_id FK
+        string account_number UK
+        string account_type
+        decimal balance
+        decimal overdraft_limit
+        string status
+        bigint version
+    }
+    TRANSACTION {
+        bigint transaction_id PK
+        string transaction_ref
+        bigint account_id FK
+        bigint related_account_id FK
+        string transaction_type
+        decimal amount
+        decimal balance_after
+        string status
+    }
+    AUDIT_LOG {
+        bigint audit_id PK
+        bigint customer_id FK
+        bigint account_id FK
+        bigint transaction_id FK
+        string action
+        string performed_by
+    }
+    DAILY_BALANCE_SNAPSHOT {
+        bigint snapshot_id PK
+        bigint account_id FK
+        date snapshot_date
+        decimal opening_balance
+        decimal closing_balance
+    }`;
+
+    const { svg } = await mermaid.render('erd-svg', erDefinition);
+    document.getElementById('erd').innerHTML = svg;
+  </script>
+</body>
+</html>
