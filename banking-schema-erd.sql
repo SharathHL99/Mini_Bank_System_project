@@ -94,7 +94,7 @@ USE banking_mini_core;
 
 -- ---------------------------------------------------------------------
 -- 1. CUSTOMER TABLE
--- ---------------------------------------------------------------------
+-- --------------------------------------------------------------------
 CREATE TABLE customer (
     customer_id           BIGINT AUTO_INCREMENT PRIMARY KEY,
     first_name            VARCHAR(100)    NOT NULL,
