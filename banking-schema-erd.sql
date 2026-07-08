@@ -3,7 +3,7 @@
 -- Target: MySQL 8.x (adjust AUTO_INCREMENT / types if using Postgres/H2)
 -- =====================================================================
 --
--- ---------------------------------------------------------------------
+-- --------------------------------------------------------------------- 
 -- ENTITY RELATIONSHIP DIAGRAM (textual / Mermaid ER notation)
 -- ---------------------------------------------------------------------
 -- Paste the block below into https://mermaid.live to render visually.
