@@ -1,5 +1,5 @@
 {
-  "info":{
+  "info": {
     "name": "Banking Mini Core System - API Documentation",
     "description": "REST API documentation (Postman collection) for the Banking Mini Core System. Covers Customer Management, Account Management, Transaction Management (deposit/withdrawal/transfer), Audit & Logs, and Reporting modules.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
