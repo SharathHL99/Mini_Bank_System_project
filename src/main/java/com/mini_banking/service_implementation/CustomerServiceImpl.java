@@ -89,7 +89,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         for (Account account : customer.getAccounts()) {
 
-            account.setStatus(AccountStatus.CLOSED());
+            account.setStatus(AccountStatus.CLOSED);
 
             accountRepository.save(account);
         }
