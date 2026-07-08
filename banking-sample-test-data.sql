@@ -7,7 +7,7 @@
 -- for use in manual testing, Postman collection runs, and integration tests.
 -- =====================================================================
 
-USE banking_mini_core;
+USE banking_mini_core; 
 
 -- Clean slate for repeatable test runs (respect FK order)
 SET FOREIGN_KEY_CHECKS = 0;
