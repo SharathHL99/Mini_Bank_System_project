@@ -1,0 +1,10 @@
+package com.mini_banking.exception;
+
+public class ResourceNotFoundException extends RuntimeException {
+
+	public ResourceNotFoundException(String message) {
+		super(message);
+	}
+	
+
+}
