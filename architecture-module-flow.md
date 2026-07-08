@@ -7,7 +7,7 @@
 │                         CLIENT LAYER                            │
 │        (Postman / Swagger UI / Frontend / External Systems)      │
 └───────────────────────────────┬───────────────────────────────────┘
-                                 │ HTTPS (JSON over REST)
+                                │ HTTPS (JSON over REST)
 ┌───────────────────────────────▼───────────────────────────────────┐
 │                       CONTROLLER LAYER                           │
 │  CustomerController | AccountController | TransactionController │
